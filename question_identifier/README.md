@@ -25,3 +25,5 @@ Other parameters(optional) given to model
   * tree_adaboost: This is used only for adaboost method. no of iteration of boosting, default is 5
   * train_test: This is boolean parameter. if true, it will train and test model. if fasle, it will test already selected model for complete dataset.
 
+## Feature
+This branch will use features which are engineered. PMI(Pointwise Mutual Information) is being used to determine which featue/words are more important for each category.

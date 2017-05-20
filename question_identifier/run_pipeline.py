@@ -85,7 +85,7 @@ if __name__ == '__main__':
                         default='random_forest')
     parser.add_argument('--max_df', dest='max_df', help='This will remove words whose freq is more in corpus',
                         type=float, default=0.8)
-    parser.add_argument('--tree', dest='n_estimator', help='no of trees to create', type=str, default=50)
+    parser.add_argument('--tree', dest='n_estimator', help='no of trees to create', type=str, default=100)
     parser.add_argument('--jobs', dest='n_jobs', help='no of jobs to run parallel', type=int, default=2)
     parser.add_argument('--tree_adaboost', dest='n_estimator_ab', help='no of iteration of boosting', type=int,
                         default=5)

@@ -3,6 +3,7 @@ from utility import print_model_details
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.naive_bayes import MultinomialNB
 
 import cPickle
 import os
@@ -22,10 +23,12 @@ def train(train_x, train_y,  model_param,model_file_name, vectorizer_file_name):
                                      random_state=model_param['state'])
 
     if model_param['name'] == 'ada_boost':
-        clf_rf = RandomForestClassifier(n_estimators=model_param['n_estimator'], n_jobs=model_param['n_jobs'],
-                                         random_state=model_param['state'])
+        # clf_rf = RandomForestClassifier(n_estimators=model_param['n_estimator'], n_jobs=model_param['n_jobs'],
+        #                                  random_state=model_param['state'])
+        clf_rf = MultinomialNB(alpha=0.01)
         clf = AdaBoostClassifier(n_estimators=model_param['n_estimator'],base_estimator=clf_rf)
-
+    if model_param['name'] == 'naive_bayes':
+        clf = MultinomialNB(alpha=0.001)
     if clf =='':
         print 'Please put proper model name in run_pipeline.'
 

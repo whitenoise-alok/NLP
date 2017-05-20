@@ -25,3 +25,6 @@ Other parameters(optional) given to model
   * tree_adaboost: This is used only for adaboost method. no of iteration of boosting, default is 5
   * train_test: This is boolean parameter. if true, it will train and test model. if fasle, it will test already selected model for complete dataset.
 
+## Features
+In this version of code I have used Part of Speech Tags to limit words for prediction.
+I have used verbs and question words for prediction

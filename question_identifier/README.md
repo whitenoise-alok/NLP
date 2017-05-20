@@ -17,7 +17,7 @@ list of packages required to run this module has been published in "requirement.
 python run_pipeline.py --input data/LabelledData.txt <--param value>
 
 Other parameters(optional) given to model
-  * model:  Model name could be one of 1.random_forest (default), 2. ada_boost
+  * model:  Model name could be one of 1.random_forest (default), 2. ada_boost 3. naive_bayes
   * test_ratio: Faction of data to validate model, default is 0.3
   * max_df: This will remove words whose freq is more in corpus, default  is 0.8
   * tree: No of tree in model, default is 100

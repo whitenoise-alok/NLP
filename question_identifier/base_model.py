@@ -1,10 +1,13 @@
+from utility import print_model_details
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
 
-from utility import print_model_details
+import cPickle
+import os
 
-def train(train_x, train_y,  model_param,model_file_name=''):
+def train(train_x, train_y,  model_param,model_file_name, vectorizer_file_name):
     print '\nTRAING THE MODEL'
 
     # CREATING TF-IDF
@@ -29,17 +32,30 @@ def train(train_x, train_y,  model_param,model_file_name=''):
     # TRAINING MODEL
     clf.fit(tfidf_x,train_y)
     predict_train = clf.predict(tfidf_x)
+    print 'saving tf-idf model %s' % (vectorizer_file_name)
+    cPickle.dump(vectorizer, open(vectorizer_file_name, 'w'))
+    print 'saving classifier model %s' % (model_file_name)
+    cPickle.dump(clf,open(model_file_name,'w'))
 
-    if model_file_name !='':
-        pass
 
     # PRINTING MODEL DETAILS
     print_model_details(train_x, train_y, predict_train, clf)
 
-    return clf, vectorizer
 
 
-def test(test_x, test_y,model, vectorizer):
+def test(test_x, test_y,model_file_name, vectorizer_file_name):
+    if not os.path.exists(vectorizer_file_name):
+        print 'Vectorizer File Name: %s' % ( vectorizer_file_name)
+        print 'TF-IDF matrix model is not cerated with this setting of max_df. Please run it with train_test=True'
+        return None
+    else:
+        vectorizer = cPickle.load(open(vectorizer_file_name))
+    if not os.path.exists(model_file_name):
+        print 'Model File Name: %s' % (model_file_name)
+        print 'Classifier model is not cerated with these setting. Please run it with train_test=True'
+        return None
+    else:
+        model = cPickle.load(open(model_file_name))
     print '\nTESTING THE MODEL'
 
     tfidf_x = vectorizer.transform(test_x)

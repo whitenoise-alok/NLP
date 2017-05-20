@@ -65,8 +65,17 @@ def main(input_file_path, model_param):
     test_x = [t.no_alien_char_text for t in test_data]
     test_y = [t.category for t in test_data]
 
-    bs_rf_clf, vectorizer = bsmdl.train(train_x, train_y, model_param)
-    bsmdl.test(test_x, test_y, bs_rf_clf, vectorizer)
+    model_file_name = 'model/'+'_'.join([model_param['name'], 'tr', str(model_param['test_size']),
+                                'tree', str(model_param['n_estimator']), 'treeab', str(model_param['n_estimator_ab'])])+'.pickle'
+    vectorizer_file_name = 'model/vectorizer_'+str(model_param['max_df'])+'.pickle'
+    if model_param['train_test']:
+        bsmdl.train(train_x, train_y, model_param,model_file_name, vectorizer_file_name)
+        bsmdl.test(test_x, test_y, model_file_name, vectorizer_file_name)
+    else:
+        new_x = train_x + test_x
+        new_y = train_y + test_y
+        bsmdl.test(new_x, new_y, model_file_name, vectorizer_file_name)
+
 
 if __name__ == '__main__':
 
@@ -76,12 +85,14 @@ if __name__ == '__main__':
                         default='random_forest')
     parser.add_argument('--max_df', dest='max_df', help='This will remove words whose freq is more in corpus',
                         type=float, default=0.8)
-    parser.add_argument('--tree', dest='n_estimator', help='no of trees to create', type=str, default=100)
+    parser.add_argument('--tree', dest='n_estimator', help='no of trees to create', type=str, default=50)
     parser.add_argument('--jobs', dest='n_jobs', help='no of jobs to run parallel', type=int, default=2)
     parser.add_argument('--tree_adaboost', dest='n_estimator_ab', help='no of iteration of boosting', type=int,
                         default=5)
     parser.add_argument('--test_ratio', dest='test_ratio', help='faction of data to validate model', type=float,
                         default=0.3)
+    parser.add_argument('--train_test', dest='train_test', help='if true, model will train and test otherwise only test',
+                        type=bool, default=False)
 
     result = parser.parse_args()
     print result.input_file_path
@@ -99,7 +110,8 @@ if __name__ == '__main__':
         'n_estimator': result.n_estimator,
         'n_jobs': result.n_jobs,
         'state': 1,
-        'n_estimator_ab': result.n_estimator_ab
+        'n_estimator_ab': result.n_estimator_ab,
+        'train_test':result.train_test
     }
 
     main(result.input_file_path, param)

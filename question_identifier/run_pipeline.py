@@ -92,7 +92,7 @@ if __name__ == '__main__':
     parser.add_argument('--test_ratio', dest='test_ratio', help='faction of data to validate model', type=float,
                         default=0.3)
     parser.add_argument('--train_test', dest='train_test', help='if true, model will train and test otherwise only test',
-                        type=bool, default=True)
+                        type=bool, default=False)
 
     result = parser.parse_args()
     print result.input_file_path

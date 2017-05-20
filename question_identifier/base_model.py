@@ -12,7 +12,7 @@ def train(train_x, train_y,  model_param,model_file_name, vectorizer_file_name):
     print '\nTRAING THE MODEL'
 
     # CREATING TF-IDF
-    vectorizer = TfidfVectorizer(max_df=model_param['max_df'])
+    vectorizer = TfidfVectorizer(max_df=model_param['max_df'], min_df = 2)
     tfidf_x = vectorizer.fit_transform(train_x)
 
     # DEFINING MODELS

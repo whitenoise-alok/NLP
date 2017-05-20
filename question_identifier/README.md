@@ -10,11 +10,11 @@ question_identifier is a machine learning module which is trained to classify a 
 Input data should be in a text file(ideally kept at data folder). It should be comma separated. Ideally it should have two clumns. 
   * Text
   * Category
-## Modules to run module
+## Packages to run module
 list of packages required to run this module has been published in "requirement.txt". Please install the packages before running this module.
 
 ## Usage
-python run_pipeline.py --input data/LabelledData.txt
+python run_pipeline.py --input data/LabelledData.txt <--param value>
 
 Other parameters(optional) given to model
   * model:  Model name could be one of 1.random_forest (default), 2. ada_boost

@@ -1,10 +1,11 @@
 from read import read_text_file
-from utility import get_histogram
+from utility import get_histogram, get_key_pmi_feature
 import base_model as bsmdl
 
 import nltk
 from nltk.corpus import stopwords
 from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 import argparse
 import os
@@ -64,6 +65,11 @@ def main(input_file_path, model_param):
 
     test_x = [t.no_alien_char_text for t in test_data]
     test_y = [t.category for t in test_data]
+
+    vectorizer = TfidfVectorizer(max_df=model_param['max_df'], min_df=4)
+    vectorizer.fit(train_x, test_x)
+    vocab = vectorizer.get_feature_names()
+    key_features = get_key_pmi_feature(train_x, train_y, vocab, no_feature= 30)
 
     model_file_name = 'model/'+'_'.join([model_param['name'], 'tr', str(model_param['test_size']),
                                 'tree', str(model_param['n_estimator']), 'treeab', str(model_param['n_estimator_ab'])])+'.pickle'

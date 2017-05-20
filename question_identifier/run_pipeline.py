@@ -76,8 +76,8 @@ def main(input_file_path, model_param):
         doc = TextDocument(text, cat)
         doc.remove_alien_char()
         doc.create_pos_tags()
-        # doc.filter_pos_tags(['NN', 'NNS', 'NNP', 'NNPS', 'WP', 'WRB', 'VBD', 'VBZ', 'JJ', 'JJR', 'JJS', 'VBZ', 'MD',
-        #                      'RB', 'RBR', 'RBS'])
+        doc.filter_pos_tags(['NN', 'NNS', 'NNP', 'NNPS', 'WP', 'WRB', 'VBD', 'VBZ', 'JJ', 'JJR', 'JJS', 'VBZ', 'MD',
+                             'RB', 'RBR', 'RBS'])
         # doc.unify_word_pos()
         doc.filter_words()
         doc_list.append(doc)

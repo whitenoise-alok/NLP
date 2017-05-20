@@ -37,6 +37,30 @@ class TextDocument:
         words = [word for word in words if word not in stopwords.words('english')]
         self.no_stop_word_text = ' '.join(words)
 
+    def create_pos_tags(self):
+        tokens = nltk.word_tokenize(self.no_alien_char_text)
+        self.pos_tags = nltk.pos_tag(tokens)
+        self.filtered_pos_tags = nltk.pos_tag(tokens)
+
+
+    def filter_pos_tags(self, pos_tags):
+        self.filtered_pos_tags = []
+        for word, tag in self.pos_tags:
+            if tag in pos_tags:
+                self.filtered_pos_tags.append((word,tag))
+
+    def unify_word_pos(self):
+        self.unify_text = ''
+        for word, tag in self.filtered_pos_tags:
+            self.unify_text += ' '+word+'_'+str(tag)
+        self.unify_text = self.unify_text.strip()
+
+    def filter_words(self):
+        self.filtered_tag_text = ''
+        for word, tag in self.filtered_pos_tags:
+            self.filtered_tag_text += ' ' + word
+        self.filtered_tag_text = self.filtered_tag_text.strip()
+
 
 def main(input_file_path, model_param):
     # READING DATA
@@ -51,6 +75,11 @@ def main(input_file_path, model_param):
     for text, cat in zip(text_list, cat_list):
         doc = TextDocument(text, cat)
         doc.remove_alien_char()
+        doc.create_pos_tags()
+        # doc.filter_pos_tags(['NN', 'NNS', 'NNP', 'NNPS', 'WP', 'WRB', 'VBD', 'VBZ', 'JJ', 'JJR', 'JJS', 'VBZ', 'MD',
+        #                      'RB', 'RBR', 'RBS'])
+        # doc.unify_word_pos()
+        doc.filter_words()
         doc_list.append(doc)
 
     # CREATING TRAINING AND TEST DATASET
@@ -59,15 +88,15 @@ def main(input_file_path, model_param):
     print 'length of training data set is %s' % (len(train_data))
     print 'length of testing data set is %s' % (len(test_data))
 
-    train_x = [t.no_alien_char_text for t in train_data]
+    train_x = [t.filtered_tag_text for t in train_data]
     train_y = [t.category for t in train_data]
 
-    test_x = [t.no_alien_char_text for t in test_data]
+    test_x = [t.filtered_tag_text for t in test_data]
     test_y = [t.category for t in test_data]
 
-    model_file_name = 'model/'+'_'.join([model_param['name'], 'tr', str(model_param['test_size']),
+    model_file_name = 'model/nlp_'+'_'.join([model_param['name'], 'tr', str(model_param['test_size']),
                                 'tree', str(model_param['n_estimator']), 'treeab', str(model_param['n_estimator_ab'])])+'.pickle'
-    vectorizer_file_name = 'model/vectorizer_'+str(model_param['max_df'])+'.pickle'
+    vectorizer_file_name = 'model/nlp_vectorizer_'+str(model_param['max_df'])+'.pickle'
     if model_param['train_test']:
         bsmdl.train(train_x, train_y, model_param,model_file_name, vectorizer_file_name)
         bsmdl.test(test_x, test_y, model_file_name, vectorizer_file_name)
@@ -85,14 +114,14 @@ if __name__ == '__main__':
                         default='random_forest')
     parser.add_argument('--max_df', dest='max_df', help='This will remove words whose freq is more in corpus',
                         type=float, default=0.8)
-    parser.add_argument('--tree', dest='n_estimator', help='no of trees to create', type=str, default=50)
+    parser.add_argument('--tree', dest='n_estimator', help='no of trees to create', type=str, default=100)
     parser.add_argument('--jobs', dest='n_jobs', help='no of jobs to run parallel', type=int, default=2)
     parser.add_argument('--tree_adaboost', dest='n_estimator_ab', help='no of iteration of boosting', type=int,
                         default=5)
     parser.add_argument('--test_ratio', dest='test_ratio', help='faction of data to validate model', type=float,
                         default=0.3)
     parser.add_argument('--train_test', dest='train_test', help='if true, model will train and test otherwise only test',
-                        type=bool, default=False)
+                        type=bool, default=True)
 
     result = parser.parse_args()
     print result.input_file_path
